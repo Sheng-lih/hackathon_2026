@@ -283,6 +283,7 @@ export default function Home() {
   const [groupSize, setGroupSize] = useState(2);
   const [formOpen, setFormOpen] = useState(false);
   const [alert, setAlert] = useState<string | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
   const [itinerary, setItinerary] = useState<Itinerary>(() =>
     buildItinerary(initialPreferences.destination, initialPreferences.durationDays),
   );
@@ -301,24 +302,48 @@ export default function Home() {
     setPreferences((current) => ({ ...current, [key]: value }));
   }
 
-  function generatePlan() {
+  async function generatePlan() {
+    if (isGenerating) return;
+
     const next: TripPreferences = {
       ...preferences,
       travelerType: groupSize <= 1 ? "solo" : "group",
     };
     setPreferences(next);
-    setItinerary(buildItinerary(next.destination, next.durationDays));
-    setAlert(
-      `Plan refreshed for ${next.destination} · ${next.pace} pace · ${
-        groupSize <= 1 ? "solo" : `group of ${groupSize}`
-      }.`,
-    );
+    setIsGenerating(true);
+    setAlert(null);
     setFormOpen(false);
+
+    try {
+      const response = await fetch("/api/plan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ preferences: next, groupSize }),
+      });
+      const payload = (await response.json()) as Itinerary & { error?: string };
+      if (!response.ok || payload.error || !payload.dailyPlans) {
+        throw new Error(payload.error ?? "Could not generate an itinerary.");
+      }
+      setItinerary({
+        tripName: payload.tripName,
+        totalEstimatedCost: payload.totalEstimatedCost,
+        dailyPlans: payload.dailyPlans,
+      });
+      setAlert(
+        `Live plan from Gemini for ${next.destination} · ${next.pace} pace.`,
+      );
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Could not reach the planner.";
+      setAlert(message);
+    } finally {
+      setIsGenerating(false);
+    }
   }
 
   function onFormSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    generatePlan();
+    void generatePlan();
   }
 
   function triggerRain() {
@@ -359,7 +384,7 @@ export default function Home() {
           <input
             type="number"
             min={1}
-            max={3}
+            max={7}
             value={preferences.durationDays}
             onChange={(event) =>
               updatePreference("durationDays", Number(event.target.value))
@@ -428,9 +453,17 @@ export default function Home() {
 
       <button
         type="submit"
-        className="mt-8 w-full rounded-2xl bg-amber-300 px-4 py-3 text-sm font-semibold text-stone-900 shadow-sm transition hover:bg-amber-200"
+        disabled={isGenerating}
+        className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-amber-300 px-4 py-3 text-sm font-semibold text-stone-900 shadow-sm transition hover:bg-amber-200 disabled:cursor-wait disabled:opacity-70"
       >
-        Generate itinerary
+        {isGenerating ? (
+          <>
+            <Spinner className="h-4 w-4 border-stone-800/30 border-t-stone-900" />
+            Planning with Gemini…
+          </>
+        ) : (
+          "Generate itinerary"
+        )}
       </button>
     </form>
     );
@@ -443,8 +476,8 @@ export default function Home() {
           <Brand />
           <div className="mt-10 flex-1">{renderIntakeForm()}</div>
           <p className="mt-8 text-xs leading-relaxed text-teal-100/60">
-            Intake uses TripPreferences from types.ts. The timeline is mock DayPlan
-            data until a live planner is wired in.
+            Generate calls /api/plan and Gemini 2.5 Flash. A sample timeline stays
+            on screen until the live itinerary arrives.
           </p>
         </aside>
 
@@ -528,7 +561,18 @@ export default function Home() {
             ) : null}
           </section>
 
-          <section className="mt-8 space-y-10">
+          <section className="relative mt-8 space-y-10">
+            {isGenerating ? (
+              <div
+                role="status"
+                className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 rounded-3xl bg-[#f4efe6]/80 backdrop-blur-[2px]"
+              >
+                <Spinner className="h-9 w-9 border-teal-200 border-t-teal-800" />
+                <p className="text-sm font-medium text-stone-600">
+                  Building your live itinerary…
+                </p>
+              </div>
+            ) : null}
             {itinerary.dailyPlans.map((day) => {
               const dayCost = day.activities.reduce(
                 (sum, activity) => sum + activity.cost,
@@ -589,6 +633,15 @@ export default function Home() {
         </div>
       ) : null}
     </div>
+  );
+}
+
+function Spinner({ className }: { className: string }) {
+  return (
+    <span
+      aria-hidden
+      className={`inline-block animate-spin rounded-full border-2 ${className}`}
+    />
   );
 }
 

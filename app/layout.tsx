@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Waypoint — AI Travel Planner",
+  title: "Roamio — AI Travel Planner",
   description:
     "Plan a trip with budget, pace, and a day-by-day itinerary you can re-plan live.",
 };

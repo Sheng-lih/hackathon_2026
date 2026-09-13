@@ -648,7 +648,7 @@ function Spinner({ className }: { className: string }) {
 function Brand() {
   return (
     <div>
-      <p className="text-lg font-semibold tracking-tight">Waypoint</p>
+      <p className="text-lg font-semibold tracking-tight">Roamio</p>
       <p className="text-xs text-teal-100/70">Day-by-day travel desk</p>
     </div>
   );

@@ -5,6 +5,27 @@ Built by Team **404founders** for the *Lifestyle Track: Planning an Escape*.
 
 ---
 
+## 🔗 Important Links
+* **Live Prototype:** https://hackathon-2026-nine-ebon.vercel.app?_vercel_share=munbf9x2WA2iUx8dT4z5S5DxTey3QpAP
+
+---
+
+## 🧠 Ideation Process & What We Dropped
+*Note: This section documents our journey to the final product, as requested by the submission guidelines.*
+
+**Initial Concepts Considered:**
+1. **The "1-Click" Instant Booker:** Inspired by Amazon's 1-click checkout, our first idea was an app that generates an itinerary and instantly books every flight, hotel, and activity in a single tap. 
+2. **"Goodreads for Travel":** A social platform that connects with major apps (like Booking.com) to fetch user travel patterns, share itineraries, and review trips.
+
+**What We Dropped & Why:**
+* **Instant Booking:** We dropped the 1-click buy feature because it was too idealistic for a hackathon timeframe. Handling complex, multi-platform payment and booking integrations distracted from solving the core user pain point of actual travel planning.
+* **The Social Platform:** We scrapped the "Goodreads for Travel" concept because, as a prototype, we don't have the existing user base or massive API access required to make social pattern-recognition valuable. 
+
+**The Final Direction:**
+We realized today’s travel apps are broken not because they lack booking buttons or social feeds, but because they **don't adapt when reality doesn't cooperate**. We pivoted to focus entirely on **Closed-Loop Live Re-planning**. Building a system that takes live data (weather, fatigue) and dynamically swaps out itinerary cards provided a highly novel, actionable solution for the "Planning an Escape" track.
+
+---
+
 ## 🚨 The Problem
 Planning a trip today requires juggling five different apps: flights, hotels, booking platforms, maps, and generic AI chatbots. Standard platforms assume every traveler is the same person experiencing a perfect day. When a sudden downpour hits, or a group member with physical limitations experiences fatigue, static itineraries completely fall apart, leaving travelers scrambling to manually rebuild their day.
 
@@ -28,6 +49,13 @@ Roamio closes the gap between planning and reality. It replaces walls of plain A
 *   **Data Integration:** Live Weather & Places Data
 
 ---
+
+## 🚀 Running Locally
+
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/Sheng-Bi/hackathon_2026.git](https://github.com/Sheng-Bi/hackathon_2026.git)
+   cd hackathon_2026
 
 ## 🚀 Running Locally
 

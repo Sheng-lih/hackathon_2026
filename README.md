@@ -7,6 +7,7 @@ Built by Team **404founders** for the *Lifestyle Track: Planning an Escape*.
 
 ## 🔗 Important Links
 * **Live Prototype:** https://hackathon-2026-nine-ebon.vercel.app?_vercel_share=munbf9x2WA2iUx8dT4z5S5DxTey3QpAP
+* **Video Pitch** https://youtu.be/_VLI6iHOHnI?si=5iZ9TGeMD9Cc1VJL
 
 ---
 
